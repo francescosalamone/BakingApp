@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Backing App</string>
+    <string name="noNameRecipe">No name available</string>
 </resources>
