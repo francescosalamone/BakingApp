@@ -49,7 +49,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 1);
+        int numberOfColumns = 1;
+        if(getResources().getBoolean(R.bool.isLargeScreen)){
+            numberOfColumns = 2;
+        }
+
+        GridLayoutManager layoutManager = new GridLayoutManager(this, numberOfColumns);
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         mBinding.recipesRv.setLayoutManager(layoutManager);
