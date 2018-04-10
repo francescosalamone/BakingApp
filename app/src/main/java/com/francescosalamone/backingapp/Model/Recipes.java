@@ -1,12 +1,16 @@
 package com.francescosalamone.backingapp.Model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Francesco on 05/04/2018.
  */
 
-public class Recipes {
+public class Recipes implements Parcelable {
     private String name;
     private List<Ingredients> ingredients;
     private List<Steps> steps;
@@ -52,4 +56,43 @@ public class Recipes {
     public void setImage(String image) {
         this.image = image;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.name);
+        dest.writeList(this.ingredients);
+        dest.writeList(this.steps);
+        dest.writeInt(this.servings);
+        dest.writeString(this.image);
+    }
+
+    public Recipes() {
+    }
+
+    protected Recipes(Parcel in) {
+        this.name = in.readString();
+        this.ingredients = new ArrayList<Ingredients>();
+        in.readList(this.ingredients, Ingredients.class.getClassLoader());
+        this.steps = new ArrayList<Steps>();
+        in.readList(this.steps, Steps.class.getClassLoader());
+        this.servings = in.readInt();
+        this.image = in.readString();
+    }
+
+    public static final Parcelable.Creator<Recipes> CREATOR = new Parcelable.Creator<Recipes>() {
+        @Override
+        public Recipes createFromParcel(Parcel source) {
+            return new Recipes(source);
+        }
+
+        @Override
+        public Recipes[] newArray(int size) {
+            return new Recipes[size];
+        }
+    };
 }
