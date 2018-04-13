@@ -1,0 +1,141 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.francescosalamone.backingapp.Fragment.RecipeDetailFragment">
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+        
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+            
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:id="@+id/collapsingToolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                app:expandedTitleTextAppearance="@android:color/transparent"
+                android:fitsSystemWindows="true">
+
+                <ImageView
+                    android:id="@+id/recipe_image_fragment_iv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop"
+                    android:fitsSystemWindows="true"
+                    app:layout_collapseMode="parallax"
+                    android:layout_marginTop="5dp"/>
+
+                <android.support.v7.widget.Toolbar
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:layout_collapseMode="pin"/>
+
+            </android.support.design.widget.CollapsingToolbarLayout>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:padding="10dp">
+
+
+            <android.support.constraint.ConstraintLayout
+                android:descendantFocusability="blocksDescendants"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/fork_and_knife"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:contentDescription="@string/recipe"
+                    android:src="@drawable/ic_local_dining_black_24dp" />
+
+                <TextView
+                    android:id="@+id/recipe_name_fragment_tv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/fork_and_knife"
+                    app:layout_constraintStart_toEndOf="@+id/fork_and_knife"
+                    app:layout_constraintTop_toTopOf="@+id/fork_and_knife"
+                    tools:text="Recipe name" />
+
+                <TextView
+                    android:id="@+id/recipe_ingredients_fragment_tv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/fork_and_knife"
+                    app:layout_constraintTop_toBottomOf="@+id/fork_and_knife"
+                    tools:text="Ingredient 1, ingredient 2, ingredient 3, ingredient 4, ingredient 5." />
+
+                <TextView
+                    android:id="@+id/serving_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/serving"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/recipe_name_fragment_tv"
+                    app:layout_constraintEnd_toStartOf="@+id/serving_fragment_tv"
+                    app:layout_constraintTop_toTopOf="@+id/recipe_name_fragment_tv" />
+
+                <TextView
+                    android:id="@+id/serving_fragment_tv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/serving_label"
+                    app:layout_constraintEnd_toEndOf="@+id/recipe_ingredients_fragment_tv"
+                    tools:text="8" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintStart_toStartOf="@+id/recipe_ingredients_fragment_tv"
+                    app:layout_constraintTop_toBottomOf="@+id/recipe_ingredients_fragment_tv"
+                    app:layout_constraintEnd_toEndOf="@+id/recipe_ingredients_fragment_tv"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginBottom="10dp">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/short_steps_description_fragment_rv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fillViewport="true"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                    </android.support.v7.widget.RecyclerView>
+
+                </LinearLayout>
+
+
+            </android.support.constraint.ConstraintLayout>
+        </android.support.v4.widget.NestedScrollView>
+
+    </android.support.design.widget.CoordinatorLayout>
+
+</layout>

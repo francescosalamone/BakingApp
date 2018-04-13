@@ -1,18 +1,14 @@
 package com.francescosalamone.backingapp.Adapter;
 
 
-import android.app.Activity;
 import android.content.Context;
-import android.databinding.DataBindingUtil;
+import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,17 +16,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.francescosalamone.backingapp.DetailActivity;
 import com.francescosalamone.backingapp.Model.Recipes;
 import com.francescosalamone.backingapp.R;
 import com.francescosalamone.backingapp.Utils.JsonUtils;
-import com.francescosalamone.backingapp.Utils.NetworkUtility;
-import com.francescosalamone.backingapp.databinding.RecipesItemsBinding;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
-import com.squareup.picasso.Transformation;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -42,14 +34,23 @@ import java.util.Set;
 
 public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHolder> {
 
+    public static final String RECIPE = "recipe";
+    public static final String BACKGROUND = "backgroundColor";
+    public static final String TEXT_COLOR = "textColor";
     private List<Recipes> recipes = new ArrayList<>();
     //private RecipesItemsBinding mBinding;
 
-    public List<Recipes> getRecipes() {
-        return recipes;
-    }
+    final private ItemClickListener clickListener;
 
     final Set<Target> protectedFromGarbageCollectorTargets = new HashSet<>();
+
+    public RecipesAdapter(ItemClickListener clickListener) {
+        this.clickListener = clickListener;
+    }
+
+    public interface ItemClickListener{
+        void onItemClick(int clickItemPosition);
+    }
 
     @NonNull
     @Override
@@ -134,7 +135,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private ImageView recipeImage;
         private TextView recipeName;
 
@@ -142,7 +143,27 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
             super(itemView);
             recipeImage = itemView.findViewById(R.id.recipes_image_iv);
             recipeName = itemView.findViewById(R.id.recipes_name_tv);
+
+            itemView.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View view) {
+            int clicked = getAdapterPosition();
+            clickListener.onItemClick(clicked);
+
+            launchDetailActivity(clicked, view.getContext(), recipeName);
+        }
+    }
+
+    public void launchDetailActivity(int position, Context context, TextView recipeName){
+        int background = ((ColorDrawable)recipeName.getBackground()).getColor();
+        int textColor = recipeName.getCurrentTextColor();
+        Intent intent = new Intent(context, DetailActivity.class);
+        intent.putExtra(RECIPE, recipes.get(position));
+        intent.putExtra(BACKGROUND, background);
+        intent.putExtra(TEXT_COLOR, textColor);
+        context.startActivity(intent);
     }
 
     public void setRecipes(List<Recipes> recipes){
@@ -154,6 +175,11 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
         recipes.get(position).setImage(url);
 
         notifyItemChanged(position);
+    }
+
+    public List<Recipes> getRecipes() {
+
+        return recipes;
     }
 
 }

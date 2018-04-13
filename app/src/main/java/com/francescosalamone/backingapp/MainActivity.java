@@ -23,7 +23,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String> {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String>,
+RecipesAdapter.ItemClickListener{
 
     private static final String RECIPES_NAME = "name";
     private static final String RECIPES_INSTANCE_STATE = "recipesList";
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mBinding.recipesRv.setLayoutManager(layoutManager);
         mBinding.recipesRv.setHasFixedSize(true);
 
-        mRecipesAdapter = new RecipesAdapter();
+        mRecipesAdapter = new RecipesAdapter(this);
         mBinding.recipesRv.setAdapter(mRecipesAdapter);
 
         if(savedInstanceState != null){
@@ -161,6 +162,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoaderReset(Loader<String> loader) {
+
+    }
+
+    @Override
+    public void onItemClick(int clickItemPosition) {
 
     }
 }
