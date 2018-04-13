@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.francescosalamone.backingapp.Fragment.RecipeDetailFragment;
 
@@ -19,8 +20,12 @@ public class DetailActivity extends AppCompatActivity {
 
         FragmentManager fragmentManager = getSupportFragmentManager();
 
-        fragmentManager.beginTransaction()
-                .add(containerId, recipeDetailFragment)
-                .commit();
+        Fragment existOldFragment = getSupportFragmentManager().findFragmentById(containerId);
+        if(existOldFragment == null || !existOldFragment.getClass().equals(recipeDetailFragment.getClass())) {
+            fragmentManager.beginTransaction()
+                    .add(containerId, recipeDetailFragment)
+                    .commit();
+        }
+
     }
 }
