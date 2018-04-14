@@ -18,18 +18,19 @@ public class JsonUtils {
         final String UNSPLASH_RESULTS = "results";
         final String UNSPLASH_URLS = "urls";
 
-        JSONObject unsplashObject = new JSONObject(data);
-        if(unsplashObject.has(UNSPLASH_RESULTS)){
-            JSONArray unsplashResults = unsplashObject.getJSONArray(UNSPLASH_RESULTS);
-            JSONObject unsplashObjectResult = new JSONObject(unsplashResults.getString(0));
-            if(unsplashObjectResult.has(UNSPLASH_URLS)){
-                JSONObject unsplashUrlObject = new JSONObject(String.valueOf(unsplashObjectResult.optString(UNSPLASH_URLS)));
-                if(unsplashUrlObject.has(UNSPLASH_IMAGE)){
-                    return unsplashUrlObject.optString(UNSPLASH_IMAGE);
+        if(data != null && !data.equals("")) {
+            JSONObject unsplashObject = new JSONObject(data);
+            if (unsplashObject.has(UNSPLASH_RESULTS)) {
+                JSONArray unsplashResults = unsplashObject.getJSONArray(UNSPLASH_RESULTS);
+                JSONObject unsplashObjectResult = new JSONObject(unsplashResults.getString(0));
+                if (unsplashObjectResult.has(UNSPLASH_URLS)) {
+                    JSONObject unsplashUrlObject = new JSONObject(String.valueOf(unsplashObjectResult.optString(UNSPLASH_URLS)));
+                    if (unsplashUrlObject.has(UNSPLASH_IMAGE)) {
+                        return unsplashUrlObject.optString(UNSPLASH_IMAGE);
+                    }
                 }
             }
         }
-
 
         return NO_URL_AVAILABLE;
     }

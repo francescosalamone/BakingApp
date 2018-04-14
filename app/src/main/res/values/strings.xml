@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Backing App</string>
     <string name="noNameRecipe">No name available</string>
+
+    <string name="serving">Servings: </string>
+    <string name="steps">Steps</string>
+    <string name="recipe">Recipe</string>
+    <string name="step_not_available">This step is not avilable</string>
 </resources>

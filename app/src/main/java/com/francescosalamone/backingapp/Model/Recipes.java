@@ -95,4 +95,17 @@ public class Recipes implements Parcelable {
             return new Recipes[size];
         }
     };
+
+    public String getIngredientsListAsText(){
+        StringBuilder ingredientsAsText = new StringBuilder();
+        for (int i=0; i<ingredients.size(); i++){
+            if(!ingredients.get(i).getIngredient().equals("")){
+                ingredientsAsText.append(ingredients.get(i).getIngredient());
+                if(i < ingredients.size()-1){
+                    ingredientsAsText.append(", ");
+                }
+            }
+        }
+        return ingredientsAsText.toString();
+    }
 }

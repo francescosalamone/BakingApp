@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <View
+        android:id="@+id/line_up"
+        android:layout_width="4dp"
+        android:layout_height="35dp"
+        android:background="@color/colorAccent"
+        app:layout_constraintStart_toStartOf="@+id/step_circle"
+        app:layout_constraintEnd_toEndOf="@+id/step_circle"/>
+
+    <View
+        android:id="@+id/line_down"
+        android:layout_width="4dp"
+        android:layout_height="35dp"
+        android:background="@color/colorAccent"
+        android:layout_marginTop="25dp"
+        app:layout_constraintTop_toTopOf="@+id/step_circle"
+        app:layout_constraintStart_toStartOf="@+id/step_circle"
+        app:layout_constraintEnd_toEndOf="@+id/step_circle"/>
+
+
+    <ImageView
+        android:id="@+id/step_circle"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_circle_black_24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/steps" />
+
+    <TextView
+        android:id="@+id/step_number_fragment_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:textColor="@android:color/white"
+        app:layout_constraintStart_toStartOf="@+id/step_circle"
+        app:layout_constraintBottom_toBottomOf="@+id/step_circle"
+        app:layout_constraintEnd_toEndOf="@+id/step_circle"
+        app:layout_constraintTop_toTopOf="@+id/step_circle"
+        tools:text="1"/>
+
+    <TextView
+        android:id="@+id/short_description_fragment_tv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        tools:text="Short description"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/step_circle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/step_circle"
+        app:layout_constraintBottom_toBottomOf="@+id/step_circle"/>
+
+
+</android.support.constraint.ConstraintLayout>
