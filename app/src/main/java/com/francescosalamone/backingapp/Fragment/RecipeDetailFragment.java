@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
@@ -81,6 +82,29 @@ public class RecipeDetailFragment extends Fragment implements StepsShortDescript
         mStepsShortDescriptionAdapter.setBackground(backgroundColor);
         mStepsShortDescriptionAdapter.setTextColor(textColor);
         mStepsShortDescriptionAdapter.setSteps(recipe.getSteps());
+
+        //Show the title only when the toolbar is collapsed
+        mBinding.appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            boolean isShow = true;
+            int scrollRange = -1;
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (scrollRange == -1) {
+                    scrollRange = appBarLayout.getTotalScrollRange();
+                }
+                if (scrollRange + verticalOffset == 0) {
+                    mBinding.collapsingToolbar.setTitle(recipe.getName());
+                    mBinding.collapsingToolbar.setCollapsedTitleTextColor(textColor);
+                    mBinding.collapsingToolbar.setAlpha(0.8f);
+                    isShow = true;
+                } else if(isShow) {
+                    mBinding.collapsingToolbar.setAlpha(1f);
+                    mBinding.collapsingToolbar.setTitle(" ");//carefull there should be a space between double quote otherwise it wont work
+                    isShow = false;
+                }
+            }
+        });
         return rootView;
     }
 
