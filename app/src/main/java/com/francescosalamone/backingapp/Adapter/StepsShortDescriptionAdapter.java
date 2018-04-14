@@ -62,10 +62,14 @@ public class StepsShortDescriptionAdapter extends RecyclerView.Adapter<StepsShor
 
         if(position == 0){
             holder.lineUp.setVisibility(GONE);
+        } else {
+            holder.lineUp.setVisibility(View.VISIBLE);
         }
 
         if(position == steps.size()-1){
             holder.lineDown.setVisibility(GONE);
+        } else {
+            holder.lineDown.setVisibility(View.VISIBLE);
         }
 
         if(background != -1){

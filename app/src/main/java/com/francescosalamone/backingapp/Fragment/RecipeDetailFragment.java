@@ -1,16 +1,25 @@
 package com.francescosalamone.backingapp.Fragment;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.LinearLayout;
 
 import com.francescosalamone.backingapp.Adapter.RecipesAdapter;
 import com.francescosalamone.backingapp.Adapter.StepsShortDescriptionAdapter;
@@ -26,6 +35,7 @@ public class RecipeDetailFragment extends Fragment implements StepsShortDescript
     private static final String RECIPE_INSTANCE_STATE = "recipe";
     private static final String BACKGROUND_INSTANCE_STATE = "background";
     private static final String TEXTCOLOR_INSTANCE_STATE = "textColor";
+    private static final int OFFSET = 55;
     private FragmentRecipeDetailBinding mBinding;
     private StepsShortDescriptionAdapter mStepsShortDescriptionAdapter;
     private int backgroundColor;
@@ -45,11 +55,26 @@ public class RecipeDetailFragment extends Fragment implements StepsShortDescript
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+
         // Inflate the layout for this fragment
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_recipe_detail, container, false);
         View rootView = mBinding.getRoot();
+
+        ((AppCompatActivity)getActivity()).setSupportActionBar(mBinding.toolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         mBinding.shortStepsDescriptionFragmentRv.setLayoutManager(layoutManager);
@@ -83,6 +108,35 @@ public class RecipeDetailFragment extends Fragment implements StepsShortDescript
         mStepsShortDescriptionAdapter.setTextColor(textColor);
         mStepsShortDescriptionAdapter.setSteps(recipe.getSteps());
 
+
+        //Here I move the position of the recyclerView under the ingredients TextView
+        ViewTreeObserver ingredientObserver = mBinding.recipeIngredientsFragmentTv.getViewTreeObserver();
+        ingredientObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+
+            @Override
+            public void onGlobalLayout() {
+                final float scale = getContext().getResources().getDisplayMetrics().density;
+                int offset_px = (int) (OFFSET * scale + 0.5f);
+
+                CoordinatorLayout.MarginLayoutParams ingredients_params = (CoordinatorLayout.MarginLayoutParams) mBinding.recipeIngredientsFragmentTv.getLayoutParams();
+                int recyclerViewMargin = mBinding.recipeIngredientsFragmentTv.getHeight() + ingredients_params.topMargin + offset_px;
+
+                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mBinding.shortStepsDescriptionFragmentRv.getLayoutParams();
+                params.setMargins(0, recyclerViewMargin, 0, 0);
+                mBinding.shortStepsDescriptionFragmentRv.setLayoutParams(params);
+                mBinding.shortStepsDescriptionFragmentRv.requestLayout();
+
+                ViewTreeObserver obs = mBinding.recipeIngredientsFragmentTv.getViewTreeObserver();
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    obs.removeOnGlobalLayoutListener(this);
+                } else {
+                    obs.removeGlobalOnLayoutListener(this);
+                }
+            }
+
+        });
+
         //Show the title only when the toolbar is collapsed
         mBinding.appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             boolean isShow = true;
@@ -95,11 +149,12 @@ public class RecipeDetailFragment extends Fragment implements StepsShortDescript
                 }
                 if (scrollRange + verticalOffset == 0) {
                     mBinding.collapsingToolbar.setTitle(recipe.getName());
-                    mBinding.collapsingToolbar.setCollapsedTitleTextColor(textColor);
-                    mBinding.collapsingToolbar.setAlpha(0.8f);
+                    mBinding.backgroundToolbar.setVisibility(View.VISIBLE);
+                    mBinding.backgroundToolbar.setBackgroundColor(backgroundColor);
+                    mBinding.backgroundToolbar.setAlpha(0.6f);
                     isShow = true;
                 } else if(isShow) {
-                    mBinding.collapsingToolbar.setAlpha(1f);
+                    mBinding.backgroundToolbar.setVisibility(View.GONE);
                     mBinding.collapsingToolbar.setTitle(" ");//carefull there should be a space between double quote otherwise it wont work
                     isShow = false;
                 }
