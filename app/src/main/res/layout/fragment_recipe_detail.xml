@@ -55,87 +55,15 @@
 
         </android.support.design.widget.AppBarLayout>
 
-            <android.support.constraint.ConstraintLayout
-                android:descendantFocusability="blocksDescendants"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                android:padding="10dp"
-                app:layout_scrollFlags="scroll"
-                android:fillViewport="true">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/short_steps_description_fragment_rv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:scrollbars="none">
 
-
-                <ImageView
-                    android:id="@+id/fork_and_knife"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:contentDescription="@string/recipe"
-                    android:src="@drawable/ic_local_dining_black_24dp" />
-
-                <TextView
-                    android:id="@+id/recipe_name_fragment_tv"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginStart="8dp"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="30sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@+id/fork_and_knife"
-                    app:layout_constraintStart_toEndOf="@+id/fork_and_knife"
-                    app:layout_constraintTop_toTopOf="@+id/fork_and_knife"
-                    tools:text="Recipe name" />
-
-                <TextView
-                    android:id="@+id/recipe_ingredients_fragment_tv"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:textSize="16sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/fork_and_knife"
-                    app:layout_constraintTop_toBottomOf="@+id/fork_and_knife"
-                    tools:text="Ingredient 1, ingredient 2, ingredient 3, ingredient 4, ingredient 5." />
-
-                <TextView
-                    android:id="@+id/serving_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/serving"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@+id/recipe_name_fragment_tv"
-                    app:layout_constraintEnd_toStartOf="@+id/serving_fragment_tv"
-                    app:layout_constraintTop_toTopOf="@+id/recipe_name_fragment_tv" />
-
-                <TextView
-                    android:id="@+id/serving_fragment_tv"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    tools:text="8"
-                    app:layout_constraintBottom_toBottomOf="@+id/serving_label"
-                    app:layout_constraintEnd_toEndOf="@+id/recipe_ingredients_fragment_tv"/>
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/short_steps_description_fragment_rv"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    app:layout_constraintHeight_default="wrap"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/recipe_ingredients_fragment_tv"
-                    android:scrollbars="none">
-
-                </android.support.v7.widget.RecyclerView>
-
-            </android.support.constraint.ConstraintLayout>
+        </android.support.v7.widget.RecyclerView>
 
     </android.support.design.widget.CoordinatorLayout>
 

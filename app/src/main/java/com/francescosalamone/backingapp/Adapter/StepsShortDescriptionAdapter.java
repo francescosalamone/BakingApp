@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.francescosalamone.backingapp.Model.Recipes;
 import com.francescosalamone.backingapp.Model.Steps;
 import com.francescosalamone.backingapp.R;
 
@@ -24,11 +25,17 @@ import static android.view.View.GONE;
  * Created by Francesco on 11/04/2018.
  */
 
-public class StepsShortDescriptionAdapter extends RecyclerView.Adapter<StepsShortDescriptionAdapter.ViewHolder>{
+public class StepsShortDescriptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+
     private List<Steps> steps = new ArrayList<>();
+    private Recipes recipe;
     private final ItemClickListener clickListener;
+
     private int background = -1;
     private int textColor = -1;
+
+    private static final int TYPE_HEADER = 0;
+    private static final int TYPE_ITEM = 1;
 
     public StepsShortDescriptionAdapter(ItemClickListener clickListener) {
         this.clickListener = clickListener;
@@ -39,46 +46,68 @@ public class StepsShortDescriptionAdapter extends RecyclerView.Adapter<StepsShor
     }
 
     @Override
-    public StepsShortDescriptionAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        int layoutId = R.layout.steps_short_description_item;
-        LayoutInflater inflater = LayoutInflater.from(context);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        int layoutId;
 
-        View view = inflater.inflate(layoutId, parent, false);
-        return new ViewHolder(view);
+        if(viewType == TYPE_HEADER) {
+
+            Context context = parent.getContext();
+            LayoutInflater inflater = LayoutInflater.from(context);
+            layoutId = R.layout.fragment_recipe_detail_header;
+            View view = inflater.inflate(layoutId, parent, false);
+            return new HeaderViewHolder(view);
+
+        } else if (viewType == TYPE_ITEM){
+            Context context = parent.getContext();
+            LayoutInflater inflater = LayoutInflater.from(context);
+            layoutId = R.layout.steps_short_description_item;
+            View view = inflater.inflate(layoutId, parent, false);
+            return new ItemViewHolder(view);
+        }
+
+        throw new RuntimeException("No type match for " + viewType + ".");
     }
 
     @Override
-    public void onBindViewHolder(StepsShortDescriptionAdapter.ViewHolder holder, int position) {
-        Steps step = steps.get(position);
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        holder.stepNumber.setText(String.valueOf(position+1));
+        if(holder instanceof ItemViewHolder) {
+            int stepPosition = position -1;
+            Steps step = steps.get(stepPosition);
+            ((ItemViewHolder)holder).stepNumber.setText(String.valueOf(stepPosition + 1));
 
-        if(!step.getShortDescription().equals("")){
-            holder.shortDescription.setText(step.getShortDescription());
-        } else {
-            holder.shortDescription.setText(R.string.step_not_available);
-        }
+            if (!step.getShortDescription().equals("")) {
+                ((ItemViewHolder)holder).shortDescription.setText(step.getShortDescription());
+            } else {
+                ((ItemViewHolder)holder).shortDescription.setText(R.string.step_not_available);
+            }
 
-        if(position == 0){
-            holder.lineUp.setVisibility(GONE);
-        } else {
-            holder.lineUp.setVisibility(View.VISIBLE);
-        }
+            if (stepPosition == 0) {
+                ((ItemViewHolder)holder).lineUp.setVisibility(GONE);
+            } else {
+                ((ItemViewHolder)holder).lineUp.setVisibility(View.VISIBLE);
+            }
 
-        if(position == steps.size()-1){
-            holder.lineDown.setVisibility(GONE);
-        } else {
-            holder.lineDown.setVisibility(View.VISIBLE);
-        }
+            if (stepPosition == steps.size() - 1) {
+                ((ItemViewHolder)holder).lineDown.setVisibility(GONE);
+            } else {
+                ((ItemViewHolder)holder).lineDown.setVisibility(View.VISIBLE);
+            }
 
-        if(background != -1){
-            holder.lineUp.setBackgroundColor(background);
-            holder.lineDown.setBackgroundColor(background);
-            holder.circleStep.setColorFilter(background);
-        }
-        if(textColor != -1){
-            holder.stepNumber.setTextColor(textColor);
+            if (background != -1) {
+                ((ItemViewHolder)holder).lineUp.setBackgroundColor(background);
+                ((ItemViewHolder)holder).lineDown.setBackgroundColor(background);
+                ((ItemViewHolder)holder).circleStep.setColorFilter(background);
+            }
+            if (textColor != -1) {
+                ((ItemViewHolder)holder).stepNumber.setTextColor(textColor);
+            }
+        } else if(holder instanceof HeaderViewHolder){
+
+            ((HeaderViewHolder)holder).recipeName.setText(recipe.getName());
+            ((HeaderViewHolder)holder).recipeServings.setText(String.valueOf(recipe.getServings()));
+            ((HeaderViewHolder)holder).recipeIngredients.setText(recipe.getIngredientsListAsText());
+            ((HeaderViewHolder)holder).forkAndKnifeIcon.setColorFilter(background);
         }
     }
 
@@ -87,19 +116,46 @@ public class StepsShortDescriptionAdapter extends RecyclerView.Adapter<StepsShor
         if(steps == null) {
             return 0;
         } else {
-            return steps.size();
+            return steps.size()+1;
         }
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    @Override
+    public int getItemViewType(int position) {
+        if (isPositionHeader(position))
+            return TYPE_HEADER;
+
+        return TYPE_ITEM;
+    }
+
+    private boolean isPositionHeader(int position) {
+        return position == 0;
+    }
+
+    public class HeaderViewHolder extends RecyclerView.ViewHolder{
+        private TextView recipeName;
+        private TextView recipeIngredients;
+        private TextView recipeServings;
+        private ImageView forkAndKnifeIcon;
+
+        public HeaderViewHolder(View itemView) {
+            super(itemView);
+
+            recipeName = itemView.findViewById(R.id.recipe_name_fragment_tv);
+            recipeIngredients = itemView.findViewById(R.id.recipe_ingredients_fragment_tv);
+            recipeServings = itemView.findViewById(R.id.serving_fragment_tv);
+            forkAndKnifeIcon = itemView.findViewById(R.id.fork_and_knife);
+        }
+    }
+
+    public class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private TextView stepNumber;
         private TextView shortDescription;
         private ImageView circleStep;
         private View lineUp;
         private View lineDown;
-        private ImageView forkAndKnife;
 
-        public ViewHolder(View itemView) {
+        public ItemViewHolder(View itemView) {
             super(itemView);
 
             stepNumber = itemView.findViewById(R.id.step_number_fragment_tv);
@@ -113,7 +169,7 @@ public class StepsShortDescriptionAdapter extends RecyclerView.Adapter<StepsShor
 
         @Override
         public void onClick(View view) {
-            int itemClicked = getAdapterPosition();
+            int itemClicked = getAdapterPosition()-1;
             clickListener.onItemClicked(itemClicked);
 
             launchDetailStep(view.getContext(), itemClicked);
@@ -126,6 +182,11 @@ public class StepsShortDescriptionAdapter extends RecyclerView.Adapter<StepsShor
 
     public void setSteps(List<Steps> steps) {
         this.steps = steps;
+        notifyDataSetChanged();
+    }
+
+    public void setRecipe(Recipes recipe){
+        this.recipe = recipe;
         notifyDataSetChanged();
     }
 
