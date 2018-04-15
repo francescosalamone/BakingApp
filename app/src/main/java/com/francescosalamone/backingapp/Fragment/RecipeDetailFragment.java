@@ -108,35 +108,6 @@ public class RecipeDetailFragment extends Fragment implements StepsShortDescript
         mStepsShortDescriptionAdapter.setTextColor(textColor);
         mStepsShortDescriptionAdapter.setSteps(recipe.getSteps());
 
-
-        //Here I move the position of the recyclerView under the ingredients TextView
-        ViewTreeObserver ingredientObserver = mBinding.recipeIngredientsFragmentTv.getViewTreeObserver();
-        ingredientObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-
-            @Override
-            public void onGlobalLayout() {
-                final float scale = getContext().getResources().getDisplayMetrics().density;
-                int offset_px = (int) (OFFSET * scale + 0.5f);
-
-                CoordinatorLayout.MarginLayoutParams ingredients_params = (CoordinatorLayout.MarginLayoutParams) mBinding.recipeIngredientsFragmentTv.getLayoutParams();
-                int recyclerViewMargin = mBinding.recipeIngredientsFragmentTv.getHeight() + ingredients_params.topMargin + offset_px;
-
-                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mBinding.shortStepsDescriptionFragmentRv.getLayoutParams();
-                params.setMargins(0, recyclerViewMargin, 0, 0);
-                mBinding.shortStepsDescriptionFragmentRv.setLayoutParams(params);
-                mBinding.shortStepsDescriptionFragmentRv.requestLayout();
-
-                ViewTreeObserver obs = mBinding.recipeIngredientsFragmentTv.getViewTreeObserver();
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    obs.removeOnGlobalLayoutListener(this);
-                } else {
-                    obs.removeGlobalOnLayoutListener(this);
-                }
-            }
-
-        });
-
         //Show the title only when the toolbar is collapsed
         mBinding.appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             boolean isShow = true;
