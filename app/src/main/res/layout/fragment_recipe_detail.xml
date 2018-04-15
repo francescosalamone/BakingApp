@@ -55,19 +55,14 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <android.support.v4.widget.NestedScrollView
-            android:id="@+id/nestedScroll"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:padding="10dp"
-            android:fillViewport="true">
-
-
             <android.support.constraint.ConstraintLayout
                 android:descendantFocusability="blocksDescendants"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                android:padding="10dp"
+                app:layout_scrollFlags="scroll"
+                android:fillViewport="true">
 
 
                 <ImageView
@@ -126,20 +121,21 @@
                     app:layout_constraintBottom_toBottomOf="@+id/serving_label"
                     app:layout_constraintEnd_toEndOf="@+id/recipe_ingredients_fragment_tv"/>
 
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/short_steps_description_fragment_rv"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintHeight_default="wrap"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/recipe_ingredients_fragment_tv"
+                    android:scrollbars="none">
 
+                </android.support.v7.widget.RecyclerView>
 
             </android.support.constraint.ConstraintLayout>
-        </android.support.v4.widget.NestedScrollView>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/short_steps_description_fragment_rv"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        </android.support.v7.widget.RecyclerView>
 
     </android.support.design.widget.CoordinatorLayout>
 
