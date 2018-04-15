@@ -1,25 +1,17 @@
 package com.francescosalamone.backingapp.Fragment;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.LinearLayout;
 
 import com.francescosalamone.backingapp.Adapter.RecipesAdapter;
 import com.francescosalamone.backingapp.Adapter.StepsShortDescriptionAdapter;
@@ -35,7 +27,6 @@ public class RecipeDetailFragment extends Fragment implements StepsShortDescript
     private static final String RECIPE_INSTANCE_STATE = "recipe";
     private static final String BACKGROUND_INSTANCE_STATE = "background";
     private static final String TEXTCOLOR_INSTANCE_STATE = "textColor";
-    private static final int OFFSET = 55;
     private FragmentRecipeDetailBinding mBinding;
     private StepsShortDescriptionAdapter mStepsShortDescriptionAdapter;
     private int backgroundColor;
@@ -94,10 +85,6 @@ public class RecipeDetailFragment extends Fragment implements StepsShortDescript
             textColor = savedInstanceState.getInt(TEXTCOLOR_INSTANCE_STATE);
         }
 
-        mBinding.recipeNameFragmentTv.setText(recipe.getName());
-        mBinding.servingFragmentTv.setText(String.valueOf(recipe.getServings()));
-        mBinding.recipeIngredientsFragmentTv.setText(recipe.getIngredientsListAsText());
-        mBinding.forkAndKnife.setColorFilter(backgroundColor);
         if(!recipe.getImage().equals(JsonUtils.NO_URL_AVAILABLE)) {
             Picasso.get()
                     .load(recipe.getImage())
@@ -107,6 +94,7 @@ public class RecipeDetailFragment extends Fragment implements StepsShortDescript
         mStepsShortDescriptionAdapter.setBackground(backgroundColor);
         mStepsShortDescriptionAdapter.setTextColor(textColor);
         mStepsShortDescriptionAdapter.setSteps(recipe.getSteps());
+        mStepsShortDescriptionAdapter.setRecipe(recipe);
 
         //Show the title only when the toolbar is collapsed
         mBinding.appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
