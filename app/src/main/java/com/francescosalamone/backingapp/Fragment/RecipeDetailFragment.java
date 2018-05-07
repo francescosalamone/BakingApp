@@ -1,9 +1,11 @@
 package com.francescosalamone.backingapp.Fragment;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -16,10 +18,13 @@ import android.view.ViewGroup;
 import com.francescosalamone.backingapp.Adapter.RecipesAdapter;
 import com.francescosalamone.backingapp.Adapter.StepsShortDescriptionAdapter;
 import com.francescosalamone.backingapp.Model.Recipes;
+import com.francescosalamone.backingapp.Model.Steps;
 import com.francescosalamone.backingapp.R;
 import com.francescosalamone.backingapp.Utils.JsonUtils;
 import com.francescosalamone.backingapp.databinding.FragmentRecipeDetailBinding;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 
 public class RecipeDetailFragment extends Fragment implements StepsShortDescriptionAdapter.ItemClickListener {
@@ -27,18 +32,36 @@ public class RecipeDetailFragment extends Fragment implements StepsShortDescript
     private static final String RECIPE_INSTANCE_STATE = "recipe";
     private static final String BACKGROUND_INSTANCE_STATE = "background";
     private static final String TEXTCOLOR_INSTANCE_STATE = "textColor";
+
     private FragmentRecipeDetailBinding mBinding;
-    private StepsShortDescriptionAdapter mStepsShortDescriptionAdapter;
     private int backgroundColor;
     private int textColor;
     private Recipes recipe;
+
+    private OnStepClickListener mCallback;
+
+    public interface OnStepClickListener{
+        void onStepClicked(List<Steps> steps, int position);
+    }
+
+    //With this we are sure that in the host activity we implement the OnStepClickListener
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            mCallback = (OnStepClickListener) context;
+        } catch (ClassCastException e){
+            throw new ClassCastException(context.toString() + "must implement OnStepClickListener");
+        }
+    }
 
     public RecipeDetailFragment() {
         // Required empty public constructor
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(RECIPE_INSTANCE_STATE, recipe);
         outState.putInt(BACKGROUND_INSTANCE_STATE, backgroundColor);
@@ -56,7 +79,7 @@ public class RecipeDetailFragment extends Fragment implements StepsShortDescript
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
 
@@ -71,7 +94,7 @@ public class RecipeDetailFragment extends Fragment implements StepsShortDescript
         mBinding.shortStepsDescriptionFragmentRv.setLayoutManager(layoutManager);
         mBinding.shortStepsDescriptionFragmentRv.setHasFixedSize(true);
 
-        mStepsShortDescriptionAdapter = new StepsShortDescriptionAdapter(this);
+        StepsShortDescriptionAdapter mStepsShortDescriptionAdapter = new StepsShortDescriptionAdapter(this);
         mBinding.shortStepsDescriptionFragmentRv.setAdapter(mStepsShortDescriptionAdapter);
 
         if(savedInstanceState == null) {
@@ -93,7 +116,6 @@ public class RecipeDetailFragment extends Fragment implements StepsShortDescript
 
         mStepsShortDescriptionAdapter.setBackground(backgroundColor);
         mStepsShortDescriptionAdapter.setTextColor(textColor);
-        mStepsShortDescriptionAdapter.setSteps(recipe.getSteps());
         mStepsShortDescriptionAdapter.setRecipe(recipe);
 
         //Show the title only when the toolbar is collapsed
@@ -123,7 +145,7 @@ public class RecipeDetailFragment extends Fragment implements StepsShortDescript
     }
 
     @Override
-    public void onItemClicked(int position) {
-
+    public void onItemClicked(List<Steps> steps, int position) {
+        mCallback.onStepClicked(steps, position);
     }
 }
