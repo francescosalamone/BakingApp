@@ -19,8 +19,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.francescosalamone.backingapp.Adapter.RecipesAdapter;
 import com.francescosalamone.backingapp.DetailActivity;
 import com.francescosalamone.backingapp.FullScreenVideoActivity;
+import com.francescosalamone.backingapp.Model.Recipes;
 import com.francescosalamone.backingapp.Model.Steps;
 import com.francescosalamone.backingapp.R;
 import com.francescosalamone.backingapp.databinding.FragmentStepDetailBinding;
@@ -122,17 +124,25 @@ public class StepDetailFragment extends Fragment {
         View rootView = mBinding.getRoot();
 
         if(savedInstanceState == null) {
-            Intent intent = getActivity().getIntent();
-            if (intent != null) {
-                steps = intent.getParcelableArrayListExtra(DetailActivity.ITEM_STEPS);
-                if (position == -1) {
-                    position = intent.getIntExtra(DetailActivity.ITEM_POSITION, 0);
+            if(getResources().getBoolean(R.bool.isTablet)){
+                Intent intent = getActivity().getIntent();
+                Recipes recipe = intent.getParcelableExtra(RecipesAdapter.RECIPE);
+                steps = recipe.getSteps();
+                position = 0;
+            } else {
+                Intent intent = getActivity().getIntent();
+                if (intent != null) {
+                    steps = intent.getParcelableArrayListExtra(DetailActivity.ITEM_STEPS);
+                    if (position == -1) {
+                        position = intent.getIntExtra(DetailActivity.ITEM_POSITION, 0);
+                    }
                 }
             }
         }
 
         int containerId = R.id.portrait_exoplayer_container;
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+
         step = steps.get(position);
         if(getResources().getBoolean(R.bool.isLandscape) && !step.getVideoURL().equals("")){
             startFullScreenMode(fragmentManager, containerId);
@@ -154,9 +164,14 @@ public class StepDetailFragment extends Fragment {
 
         exoPlayerFragment = new ExoPlayerFragment();
 
-        fragmentManager.beginTransaction()
-                .add(containerId, exoPlayerFragment)
-                .commit();
+        Fragment existOldFragment = fragmentManager.findFragmentById(containerId);
+        if(existOldFragment == null || !existOldFragment.getClass().equals(existOldFragment.getClass())) {
+            fragmentManager.beginTransaction()
+                    .add(containerId, exoPlayerFragment)
+                    .commit();
+        } else {
+            exoPlayerFragment = (ExoPlayerFragment) existOldFragment;
+        }
 
         popolateUI(fragmentManager, containerId);
     }
@@ -174,9 +189,12 @@ public class StepDetailFragment extends Fragment {
     }
 
     private void popolateUI(final FragmentManager fragmentManager, final int containerId){
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(step.getShortDescription());
+        if(!getResources().getBoolean(R.bool.isTablet)) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(step.getShortDescription());
+        }
 
         mCallback.onVideoUrlChanged(step.getVideoURL(), exoPlayerFragment);
+        exoPlayerFragment.setSeekTo(currentVideoPosition);
 
         if(step.getVideoURL().equals("")){
             mBinding.portraitExoplayerContainer.setVisibility(View.GONE);
@@ -199,7 +217,7 @@ public class StepDetailFragment extends Fragment {
                 mBinding.stepThumbnailIv.setVisibility(GONE);
             }
 
-            if (position < steps.size() - 1) {
+            if (position < steps.size() - 1 && !getResources().getBoolean(R.bool.isTablet)) {
                 mBinding.nextStepBt.setVisibility(View.VISIBLE);
                 mBinding.nextStepBt.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -215,7 +233,7 @@ public class StepDetailFragment extends Fragment {
                 mBinding.nextStepBt.setVisibility(GONE);
             }
 
-            if (position > 0) {
+            if (position > 0 && !getResources().getBoolean(R.bool.isTablet)) {
                 mBinding.prevStepBt.setVisibility(View.VISIBLE);
                 mBinding.prevStepBt.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -244,6 +262,14 @@ public class StepDetailFragment extends Fragment {
                 getActivity().finish();
             }
         }
+    }
+
+    public void setPosition(int position){
+        this.position = position;
+        step = steps.get(position);
+        currentVideoPosition = 0L;
+        exoPlayerFragment.setSeekTo(currentVideoPosition);
+        popolateUI(null, 0);
     }
 
 }
