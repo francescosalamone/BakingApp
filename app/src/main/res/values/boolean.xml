@@ -2,4 +2,5 @@
 <resources>
     <item name="isLargeScreen" type="bool">false</item>
     <item name="isLandscape" type="bool">false</item>
+    <item name="isTablet" type="bool">false</item>
 </resources>

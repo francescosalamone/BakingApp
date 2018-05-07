@@ -67,6 +67,8 @@ public class FullScreenVideoActivity extends AppCompatActivity {
                 fragmentManager.beginTransaction()
                         .add(containerId, exoPlayerFragment)
                         .commit();
+            } else {
+                exoPlayerFragment = (ExoPlayerFragment) existOldFragment;
             }
 
             exoPlayerFragment.setMediaUrl(videoUrl);
