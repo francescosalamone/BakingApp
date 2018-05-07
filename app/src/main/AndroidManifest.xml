@@ -27,7 +27,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-        <activity android:name=".StepActivity"></activity>
+        <activity android:name=".StepActivity"
+            android:parentActivityName=".DetailActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".DetailActivity"/>
+        </activity>
+        <activity android:name=".FullScreenVideoActivity"></activity>
     </application>
 
 </manifest>

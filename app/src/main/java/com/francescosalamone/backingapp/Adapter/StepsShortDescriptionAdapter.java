@@ -27,7 +27,6 @@ import static android.view.View.GONE;
 
 public class StepsShortDescriptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
-    private List<Steps> steps = new ArrayList<>();
     private Recipes recipe;
     private final ItemClickListener clickListener;
 
@@ -42,7 +41,7 @@ public class StepsShortDescriptionAdapter extends RecyclerView.Adapter<RecyclerV
     }
 
     public interface ItemClickListener{
-        void onItemClicked(int position);
+        void onItemClicked(List<Steps> steps, int itemClicked);
     }
 
     @Override
@@ -73,8 +72,8 @@ public class StepsShortDescriptionAdapter extends RecyclerView.Adapter<RecyclerV
 
         if(holder instanceof ItemViewHolder) {
             int stepPosition = position -1;
-            Steps step = steps.get(stepPosition);
-            ((ItemViewHolder)holder).stepNumber.setText(String.valueOf(stepPosition + 1));
+            Steps step = recipe.getSteps().get(stepPosition);
+            ((ItemViewHolder)holder).stepNumber.setText(String.valueOf(stepPosition));
 
             if (!step.getShortDescription().equals("")) {
                 ((ItemViewHolder)holder).shortDescription.setText(step.getShortDescription());
@@ -88,7 +87,7 @@ public class StepsShortDescriptionAdapter extends RecyclerView.Adapter<RecyclerV
                 ((ItemViewHolder)holder).lineUp.setVisibility(View.VISIBLE);
             }
 
-            if (stepPosition == steps.size() - 1) {
+            if (stepPosition == recipe.getSteps().size() - 1) {
                 ((ItemViewHolder)holder).lineDown.setVisibility(GONE);
             } else {
                 ((ItemViewHolder)holder).lineDown.setVisibility(View.VISIBLE);
@@ -113,10 +112,10 @@ public class StepsShortDescriptionAdapter extends RecyclerView.Adapter<RecyclerV
 
     @Override
     public int getItemCount() {
-        if(steps == null) {
+        if(recipe.getSteps() == null) {
             return 0;
         } else {
-            return steps.size()+1;
+            return recipe.getSteps().size()+1;
         }
     }
 
@@ -170,19 +169,8 @@ public class StepsShortDescriptionAdapter extends RecyclerView.Adapter<RecyclerV
         @Override
         public void onClick(View view) {
             int itemClicked = getAdapterPosition()-1;
-            clickListener.onItemClicked(itemClicked);
-
-            launchDetailStep(view.getContext(), itemClicked);
+            clickListener.onItemClicked(recipe.getSteps(), itemClicked);
         }
-    }
-
-    private void launchDetailStep(Context context, int position){
-        //TODO call the step activity / fragment
-    }
-
-    public void setSteps(List<Steps> steps) {
-        this.steps = steps;
-        notifyDataSetChanged();
     }
 
     public void setRecipe(Recipes recipe){

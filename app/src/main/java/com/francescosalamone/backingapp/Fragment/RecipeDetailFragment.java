@@ -18,10 +18,13 @@ import android.view.ViewGroup;
 import com.francescosalamone.backingapp.Adapter.RecipesAdapter;
 import com.francescosalamone.backingapp.Adapter.StepsShortDescriptionAdapter;
 import com.francescosalamone.backingapp.Model.Recipes;
+import com.francescosalamone.backingapp.Model.Steps;
 import com.francescosalamone.backingapp.R;
 import com.francescosalamone.backingapp.Utils.JsonUtils;
 import com.francescosalamone.backingapp.databinding.FragmentRecipeDetailBinding;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 
 public class RecipeDetailFragment extends Fragment implements StepsShortDescriptionAdapter.ItemClickListener {
@@ -38,7 +41,7 @@ public class RecipeDetailFragment extends Fragment implements StepsShortDescript
     private OnStepClickListener mCallback;
 
     public interface OnStepClickListener{
-        void onStepClicked(int position);
+        void onStepClicked(List<Steps> steps, int position);
     }
 
     //With this we are sure that in the host activity we implement the OnStepClickListener
@@ -113,7 +116,6 @@ public class RecipeDetailFragment extends Fragment implements StepsShortDescript
 
         mStepsShortDescriptionAdapter.setBackground(backgroundColor);
         mStepsShortDescriptionAdapter.setTextColor(textColor);
-        mStepsShortDescriptionAdapter.setSteps(recipe.getSteps());
         mStepsShortDescriptionAdapter.setRecipe(recipe);
 
         //Show the title only when the toolbar is collapsed
@@ -143,7 +145,7 @@ public class RecipeDetailFragment extends Fragment implements StepsShortDescript
     }
 
     @Override
-    public void onItemClicked(int position) {
-        mCallback.onStepClicked(position);
+    public void onItemClicked(List<Steps> steps, int position) {
+        mCallback.onStepClicked(steps, position);
     }
 }

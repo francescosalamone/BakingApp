@@ -1,7 +1,10 @@
 package com.francescosalamone.backingapp.Model;
 
+import android.content.res.Resources;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.francescosalamone.backingapp.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,6 +103,8 @@ public class Recipes implements Parcelable {
         StringBuilder ingredientsAsText = new StringBuilder();
         for (int i=0; i<ingredients.size(); i++){
             if(!ingredients.get(i).getIngredient().equals("")){
+                ingredientsAsText.append(ingredients.get(i).getQuantity());
+                ingredientsAsText.append(" " + ingredients.get(i).getMeasure() + " of ");
                 ingredientsAsText.append(ingredients.get(i).getIngredient());
                 if(i < ingredients.size()-1){
                     ingredientsAsText.append(", ");
