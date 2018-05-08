@@ -2,6 +2,7 @@ package com.francescosalamone.backingapp;
 
 import android.databinding.DataBindingUtil;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -103,6 +104,7 @@ RecipesAdapter.ItemClickListener{
             @Override
             protected void onStartLoading() {
                 super.onStartLoading();
+                EspressoIdlingResource.increment();
                 forceLoad();
             }
 
@@ -128,6 +130,7 @@ RecipesAdapter.ItemClickListener{
 
     @Override
     public void onLoadFinished(Loader<String> loader, String json) {
+        EspressoIdlingResource.decrement();
         if(loader.getId() == RECIPES_LOADER){
             List<Recipes> recipesList = GsonUtils.parseGsonToRecipes(json);
 
