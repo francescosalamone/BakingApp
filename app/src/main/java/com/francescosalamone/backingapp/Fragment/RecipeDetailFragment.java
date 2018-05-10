@@ -32,11 +32,13 @@ public class RecipeDetailFragment extends Fragment implements StepsShortDescript
     private static final String RECIPE_INSTANCE_STATE = "recipe";
     private static final String BACKGROUND_INSTANCE_STATE = "background";
     private static final String TEXTCOLOR_INSTANCE_STATE = "textColor";
+    private static final String RV_POSITION_INSTANCE_STATE = "rv_position";
 
     private FragmentRecipeDetailBinding mBinding;
     private int backgroundColor;
     private int textColor;
     private Recipes recipe;
+    private LinearLayoutManager layoutManager;
 
     private OnStepClickListener mCallback;
 
@@ -66,6 +68,7 @@ public class RecipeDetailFragment extends Fragment implements StepsShortDescript
         outState.putParcelable(RECIPE_INSTANCE_STATE, recipe);
         outState.putInt(BACKGROUND_INSTANCE_STATE, backgroundColor);
         outState.putInt(TEXTCOLOR_INSTANCE_STATE, textColor);
+        outState.putInt(RV_POSITION_INSTANCE_STATE, layoutManager.findFirstVisibleItemPosition());
     }
 
     @Override
@@ -90,7 +93,7 @@ public class RecipeDetailFragment extends Fragment implements StepsShortDescript
         ((AppCompatActivity)getActivity()).setSupportActionBar(mBinding.toolbar);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager = new LinearLayoutManager(getContext());
         mBinding.shortStepsDescriptionFragmentRv.setLayoutManager(layoutManager);
         mBinding.shortStepsDescriptionFragmentRv.setHasFixedSize(true);
 
@@ -106,6 +109,7 @@ public class RecipeDetailFragment extends Fragment implements StepsShortDescript
             recipe = savedInstanceState.getParcelable(RECIPE_INSTANCE_STATE);
             backgroundColor = savedInstanceState.getInt(BACKGROUND_INSTANCE_STATE);
             textColor = savedInstanceState.getInt(TEXTCOLOR_INSTANCE_STATE);
+            layoutManager.scrollToPosition(savedInstanceState.getInt(RV_POSITION_INSTANCE_STATE));
         }
 
         if(!recipe.getImage().equals(JsonUtils.NO_URL_AVAILABLE)) {
@@ -121,7 +125,7 @@ public class RecipeDetailFragment extends Fragment implements StepsShortDescript
         //Show the title only when the toolbar is collapsed
         mBinding.appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             boolean isShow = true;
-            int scrollRange = -1;
+            int scrollRange=-1;
 
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {

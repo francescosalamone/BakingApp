@@ -3,7 +3,7 @@ package com.francescosalamone.backingapp;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -11,7 +11,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.util.Log;
 
 import com.francescosalamone.backingapp.Adapter.RecipesAdapter;
 import com.francescosalamone.backingapp.Model.Recipes;
@@ -100,6 +99,7 @@ RecipesAdapter.ItemClickListener{
         }
     }
 
+    @NonNull
     @Override
     public Loader<String> onCreateLoader(final int i, final Bundle bundle) {
 
@@ -132,7 +132,7 @@ RecipesAdapter.ItemClickListener{
     }
 
     @Override
-    public void onLoadFinished(Loader<String> loader, String json) {
+    public void onLoadFinished(@NonNull Loader<String> loader, String json) {
         EspressoIdlingResource.decrement();
         if(loader.getId() == RECIPES_LOADER){
             List<Recipes> recipesList = GsonUtils.parseGsonToRecipes(json);
@@ -168,7 +168,7 @@ RecipesAdapter.ItemClickListener{
     }
 
     @Override
-    public void onLoaderReset(Loader<String> loader) {
+    public void onLoaderReset(@NonNull Loader<String> loader) {
 
     }
 

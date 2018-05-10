@@ -6,15 +6,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.francescosalamone.backingapp.R;
 import com.francescosalamone.backingapp.Utils.PlayerUtils;
 import com.francescosalamone.backingapp.databinding.FragmentExoPlayerBinding;
+import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 
 public class ExoPlayerFragment extends Fragment {
@@ -23,7 +22,8 @@ public class ExoPlayerFragment extends Fragment {
     private FragmentExoPlayerBinding mBinding;
     private SimpleExoPlayer exoPlayer;
     private Uri videoUri;
-    private boolean activityIsStarted=false;
+    private boolean activityIsStarted = false;
+    private boolean videoIsPlaying = false;
 
     public ExoPlayerFragment() {
         // Required empty public constructor
@@ -49,10 +49,10 @@ public class ExoPlayerFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
+        super.onDestroyView();
         if(exoPlayer != null) {
             PlayerUtils.releasePlayer(exoPlayer);
         }
-        super.onDestroyView();
     }
 
     public void setMediaUrl(String mediaUrl){
@@ -73,6 +73,10 @@ public class ExoPlayerFragment extends Fragment {
         }
     }
 
+    public boolean getCurrentStatus() {
+        return exoPlayer != null && exoPlayer.getPlayWhenReady();
+    }
+
     private void startVideo(){
         if(activityIsStarted) {
             if (videoUri != null) {
@@ -80,10 +84,10 @@ public class ExoPlayerFragment extends Fragment {
                 if (exoPlayer != null) {
                     PlayerUtils.releasePlayer(exoPlayer);
                 }
-                exoPlayer = PlayerUtils.initPlayer(videoUri, getContext(), mBinding.videoPlayer, currentVideoPosition);
+                exoPlayer = PlayerUtils.initPlayer(videoUri, getContext(), mBinding.videoPlayer, currentVideoPosition, videoIsPlaying);
             } else {
                 mBinding.videoPlayer.setVisibility(View.GONE);
-                exoPlayer = null;
+                PlayerUtils.releasePlayer(exoPlayer);
             }
         }
     }
@@ -93,5 +97,31 @@ public class ExoPlayerFragment extends Fragment {
             exoPlayer.seekTo(currentVideoPosition);
         }
         this.currentVideoPosition = currentVideoPosition;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(exoPlayer != null) {
+            PlayerUtils.releasePlayer(exoPlayer);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if(exoPlayer != null) {
+            PlayerUtils.releasePlayer(exoPlayer);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        startVideo();
+    }
+
+    public void setStatus(boolean status) {
+        videoIsPlaying = status;
     }
 }

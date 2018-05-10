@@ -1,8 +1,7 @@
 package com.francescosalamone.backingapp.Adapter;
 
-import android.content.ContentUris;
 import android.content.Context;
-import android.media.Image;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,9 +13,6 @@ import com.francescosalamone.backingapp.Model.Recipes;
 import com.francescosalamone.backingapp.Model.Steps;
 import com.francescosalamone.backingapp.R;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import static android.view.View.GONE;
@@ -44,8 +40,9 @@ public class StepsShortDescriptionAdapter extends RecyclerView.Adapter<RecyclerV
         void onItemClicked(List<Steps> steps, int itemClicked);
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         int layoutId;
 
         if(viewType == TYPE_HEADER) {
@@ -68,14 +65,14 @@ public class StepsShortDescriptionAdapter extends RecyclerView.Adapter<RecyclerV
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         if(holder instanceof ItemViewHolder) {
             int stepPosition = position -1;
             Steps step = recipe.getSteps().get(stepPosition);
             ((ItemViewHolder)holder).stepNumber.setText(String.valueOf(stepPosition));
 
-            if (!step.getShortDescription().equals("")) {
+            if (!step.getShortDescription().isEmpty()) {
                 ((ItemViewHolder)holder).shortDescription.setText(step.getShortDescription());
             } else {
                 ((ItemViewHolder)holder).shortDescription.setText(R.string.step_not_available);
