@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:initialKeyguardLayout="@layout/recipe_widget_provider"
+    android:configure="com.francescosalamone.backingapp.MainActivity"
+    android:initialLayout="@layout/recipe_widget_provider"
+    android:minHeight="240dp"
+    android:minWidth="360dp"
+    android:previewImage="@drawable/recipe_icon"
+    android:resizeMode="horizontal|vertical"
+    android:updatePeriodMillis="10800000"
+    android:widgetCategory="home_screen"/>

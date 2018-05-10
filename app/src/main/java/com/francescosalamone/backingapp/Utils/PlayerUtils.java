@@ -46,9 +46,7 @@ public class PlayerUtils {
 
         playerView.setPlayer(exoPlayer);
 
-        String userAgent = Util.getUserAgent(context, context.getString(R.string.app_name));
-        DefaultBandwidthMeter defaultBandwidthMeter = new DefaultBandwidthMeter();
-        DataSource.Factory dataSource = new DefaultDataSourceFactory(context, userAgent, defaultBandwidthMeter);
+        DataSource.Factory dataSource = new CacheDataSourceFactory(context, 100 * 1024 * 1024, 5 * 1024 * 1024);
         MediaSource mediaSource = new ExtractorMediaSource.Factory(dataSource)
                 .createMediaSource(mediaUri);
 

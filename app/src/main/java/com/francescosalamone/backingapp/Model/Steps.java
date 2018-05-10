@@ -1,5 +1,6 @@
 package com.francescosalamone.backingapp.Model;
 
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -10,6 +11,7 @@ import android.os.Parcelable;
 public class Steps implements Parcelable {
     private String shortDescription;
     private String description;
+
     private String videoURL;
     private String thumbnailURL;
 
