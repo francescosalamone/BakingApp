@@ -1,5 +1,6 @@
 package com.francescosalamone.backingapp;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -51,6 +52,8 @@ RecipesAdapter.ItemClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //Set to canceled, for the widget, to prevent the early closing of the activity
+        setResult(RESULT_CANCELED);
 
         int numberOfColumns = 1;
         if(getResources().getBoolean(R.bool.isLargeScreen)){

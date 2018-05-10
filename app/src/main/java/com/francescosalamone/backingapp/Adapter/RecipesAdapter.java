@@ -1,24 +1,31 @@
 package com.francescosalamone.backingapp.Adapter;
 
 
+import android.app.Activity;
+import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 
 
 import com.francescosalamone.backingapp.DetailActivity;
 import com.francescosalamone.backingapp.Model.Recipes;
 import com.francescosalamone.backingapp.R;
+import com.francescosalamone.backingapp.RecipeWidgetProvider;
 import com.francescosalamone.backingapp.Utils.JsonUtils;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -27,6 +34,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by Francesco on 05/04/2018.
@@ -37,6 +46,8 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
     public static final String RECIPE = "recipe";
     public static final String BACKGROUND = "backgroundColor";
     public static final String TEXT_COLOR = "textColor";
+    private static final String CONFIGURATION_WIDGET_INTENT = "android.appwidget.action.APPWIDGET_CONFIGURE";
+    private static final String WIDGET_UPDATE = "DATA_WIDGET_UPDATED";
     private List<Recipes> recipes = new ArrayList<>();
     //private RecipesItemsBinding mBinding;
 
@@ -151,12 +162,44 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
         public void onClick(View view) {
             int clicked = getAdapterPosition();
             clickListener.onItemClick(clicked);
+            Context context = view.getContext();
 
-            launchDetailActivity(clicked, view.getContext(), recipeName);
+            Intent intent = ((Activity)context).getIntent();
+            if(intent.getAction().equals(CONFIGURATION_WIDGET_INTENT)){
+                Bundle extras = intent.getExtras();
+                if (extras != null) {
+                    int mAppWidgetId = extras.getInt(
+                            AppWidgetManager.EXTRA_APPWIDGET_ID,
+                            AppWidgetManager.INVALID_APPWIDGET_ID);
+                    configureWidget(clicked, context, mAppWidgetId, recipeName);
+                } else {
+                    ((Activity)context).finish();
+                }
+
+
+            } else {
+                launchDetailActivity(clicked, context, recipeName);
+            }
         }
     }
 
-    public void launchDetailActivity(int position, Context context, TextView recipeName){
+    private void configureWidget(int position,  Context context, int mAppWidgetId, TextView recipeName){
+        int background = ((ColorDrawable)recipeName.getBackground()).getColor();
+        int textColor = recipeName.getCurrentTextColor();
+        Intent dataIntent = new Intent(context, RecipeWidgetProvider.class);
+        dataIntent.setAction(WIDGET_UPDATE);
+        dataIntent.putExtra(RECIPE, recipes.get(position));
+        dataIntent.putExtra(BACKGROUND, background);
+        dataIntent.putExtra(TEXT_COLOR, textColor);
+        context.sendBroadcast(dataIntent);
+
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
+        ((Activity)context).setResult(RESULT_OK, resultIntent);
+        ((Activity)context).finish();
+    }
+
+    private void launchDetailActivity(int position, Context context, TextView recipeName){
         int background = ((ColorDrawable)recipeName.getBackground()).getColor();
         int textColor = recipeName.getCurrentTextColor();
         Intent intent = new Intent(context, DetailActivity.class);

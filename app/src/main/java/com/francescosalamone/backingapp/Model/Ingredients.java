@@ -6,11 +6,11 @@ import android.os.Parcelable;
 /**
  * Created by Francesco on 05/04/2018.
  */
-
 public class Ingredients implements Parcelable {
     private double quantity;
     private String measure;
     private String ingredient;
+
 
     public double getQuantity() {
         return quantity;
