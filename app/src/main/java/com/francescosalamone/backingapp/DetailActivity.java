@@ -6,8 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.francescosalamone.backingapp.Fragment.ExoPlayerFragment;
 import com.francescosalamone.backingapp.Fragment.RecipeDetailFragment;
@@ -18,7 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DetailActivity extends AppCompatActivity implements RecipeDetailFragment.OnStepClickListener,
-        StepDetailFragment.OnVideoUrlListener, StepDetailFragment.OnStartFullScreenListener{
+        StepDetailFragment.OnVideoUrlListener, StepDetailFragment.OnStartFullScreenListener,
+        StepDetailFragment.OnVideoStatusPlayListener{
 
     public static final String ITEM_STEPS = "steps";
     public static final String ITEM_POSITION = "position";
@@ -87,5 +86,10 @@ public class DetailActivity extends AppCompatActivity implements RecipeDetailFra
             return exoPlayerFragment.getCurrentPosition();
         }
         return 0L;
+    }
+
+    @Override
+    public boolean onVideoStatusPlayChanged(ExoPlayerFragment exoPlayerFragment) {
+        return exoPlayerFragment != null && exoPlayerFragment.getCurrentStatus();
     }
 }

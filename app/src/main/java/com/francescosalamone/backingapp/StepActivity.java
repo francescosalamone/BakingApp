@@ -1,19 +1,16 @@
 package com.francescosalamone.backingapp;
 
 
-import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.francescosalamone.backingapp.Fragment.ExoPlayerFragment;
 import com.francescosalamone.backingapp.Fragment.StepDetailFragment;
 
 public class StepActivity extends AppCompatActivity implements StepDetailFragment.OnVideoUrlListener,
-StepDetailFragment.OnStartFullScreenListener{
+StepDetailFragment.OnStartFullScreenListener, StepDetailFragment.OnVideoStatusPlayListener{
 
     //private ExoPlayerFragment exoPlayerFragment;
 
@@ -48,5 +45,10 @@ StepDetailFragment.OnStartFullScreenListener{
             return exoPlayerFragment.getCurrentPosition();
         }
         return 0L;
+    }
+
+    @Override
+    public boolean onVideoStatusPlayChanged(ExoPlayerFragment exoPlayerFragment) {
+        return exoPlayerFragment != null && exoPlayerFragment.getCurrentStatus();
     }
 }

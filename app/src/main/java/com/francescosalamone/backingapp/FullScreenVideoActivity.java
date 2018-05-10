@@ -5,26 +5,25 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import com.francescosalamone.backingapp.Fragment.ExoPlayerFragment;
 import com.francescosalamone.backingapp.Fragment.StepDetailFragment;
-import com.francescosalamone.backingapp.Model.Steps;
-
-import java.util.List;
 
 public class FullScreenVideoActivity extends AppCompatActivity {
 
     public static final int RESULT_POSITION = 112;
     private static final String STATE_VIDEO_POSITION = "video_position";
+    public static final String STATE_VIDEO_IS_PLAYING = "video_is_playing";
     private ExoPlayerFragment exoPlayerFragment;
     private long currentVideoPosition = 0L;
+    private boolean videoIsPlaying = false;
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putLong(STATE_VIDEO_POSITION, exoPlayerFragment.getCurrentPosition());
+        outState.putBoolean(STATE_VIDEO_IS_PLAYING, exoPlayerFragment.getCurrentStatus());
     }
 
     @Override
@@ -40,6 +39,7 @@ public class FullScreenVideoActivity extends AppCompatActivity {
 
         if(savedInstanceState != null){
             currentVideoPosition = savedInstanceState.getLong(STATE_VIDEO_POSITION, 0L);
+            videoIsPlaying = savedInstanceState.getBoolean(STATE_VIDEO_IS_PLAYING);
         }
 
         exoPlayerFragment = new ExoPlayerFragment();
@@ -54,13 +54,14 @@ public class FullScreenVideoActivity extends AppCompatActivity {
             }
             Intent intent = new Intent();
             intent.putExtra(StepDetailFragment.BUNDLE_VIDEO_POSITION, currentVideoPosition);
+            intent.putExtra(StepDetailFragment.BUNDLE_VIDEO_IS_PLAYING, videoIsPlaying);
             setResult(RESULT_POSITION, intent);
             finish();
         } else {
             Intent intent = getIntent();
             String videoUrl = intent.getStringExtra(StepDetailFragment.BUNDLE_VIDEO_URL);
             currentVideoPosition = intent.getLongExtra(StepDetailFragment.BUNDLE_VIDEO_POSITION, 0L);
-
+            videoIsPlaying = intent.getBooleanExtra(StepDetailFragment.BUNDLE_VIDEO_IS_PLAYING, true);
 
             Fragment existOldFragment = getSupportFragmentManager().findFragmentById(containerId);
             if (existOldFragment == null || !existOldFragment.getClass().equals(exoPlayerFragment.getClass())) {
@@ -73,6 +74,7 @@ public class FullScreenVideoActivity extends AppCompatActivity {
 
             exoPlayerFragment.setMediaUrl(videoUrl);
             exoPlayerFragment.setSeekTo(currentVideoPosition);
+            exoPlayerFragment.setStatus(videoIsPlaying);
         }
 
     }

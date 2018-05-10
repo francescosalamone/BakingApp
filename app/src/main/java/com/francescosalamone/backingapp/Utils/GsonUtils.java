@@ -1,22 +1,12 @@
 package com.francescosalamone.backingapp.Utils;
 
-import android.util.Log;
-
 import com.francescosalamone.backingapp.Model.Recipes;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 /**
  * Created by Francesco on 05/04/2018.

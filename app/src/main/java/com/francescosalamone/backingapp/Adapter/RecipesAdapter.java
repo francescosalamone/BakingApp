@@ -85,7 +85,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
 
                 Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
                     @Override
-                    public void onGenerated(Palette palette) {
+                    public void onGenerated(@NonNull Palette palette) {
                         Palette.Swatch swatch = palette.getDarkVibrantSwatch();
                         if(swatch != null){
                             //mBinding.recipesNameTv.setBackgroundColor(swatch.getRgb());

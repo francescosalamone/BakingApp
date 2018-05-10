@@ -4,12 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 
 import com.francescosalamone.backingapp.R;
-import com.google.android.exoplayer2.C;
-import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.LoadControl;
-import com.google.android.exoplayer2.RenderersFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
@@ -17,7 +12,6 @@ import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
-import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DataSource;
@@ -35,7 +29,7 @@ public class PlayerUtils {
     public PlayerUtils() {
     }
 
-    public static SimpleExoPlayer initPlayer(Uri mediaUri, Context context, PlayerView playerView, long startVideoPosition){
+    public static SimpleExoPlayer initPlayer(Uri mediaUri, Context context, PlayerView playerView, long startVideoPosition, boolean videoIsPlaying){
         SimpleExoPlayer exoPlayer;
         //playerView = new PlayerView(context);
 
@@ -52,7 +46,7 @@ public class PlayerUtils {
 
         exoPlayer.prepare(mediaSource);
         exoPlayer.seekTo(startVideoPosition);
-        exoPlayer.setPlayWhenReady(true);
+        exoPlayer.setPlayWhenReady(videoIsPlaying);
 
         return exoPlayer;
     }
