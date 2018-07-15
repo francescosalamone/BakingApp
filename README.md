@@ -1,4 +1,4 @@
-# Backing App project
+# Baking App project
 The fourth exercise of the Android Developer Nanodegree Program by Udacity
     
 ## Main target
